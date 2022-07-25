@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -872,5 +872,38 @@ public class CardDeliveryTest {
         String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
 
         assertEquals("Поле обязательно для заполнения", subText.trim());
+    }
+
+    @Test
+    void successDeliveryWithPopupElements() {
+        SelenideElement form = $x("//form");
+
+        form.$("[data-test-id='city'] input").setValue("Мо");
+        String city = "Москва";
+        $$x("//*[@class='popup__container']//*[@class='menu-item__control']").findBy(text(city)).click();
+        form.$("[data-test-id='city'] [class='input__control']").shouldHave(value("Москва"));
+        LocalDate currentDate = LocalDate.now();
+        int monthCurrentDate = currentDate.getMonthValue();
+        int yearCurrentDate = currentDate.getYear();
+        LocalDate deliveryDate = LocalDate.now().plusWeeks(1);
+        int monthDeliveryDate = deliveryDate.getMonthValue();
+        int yearDeliveryDate = deliveryDate.getYear();
+        String dayOfDeliveryDate = String.valueOf(deliveryDate.getDayOfMonth());
+        String date = deliveryDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        form.$("[data-test-id='date'] button").click();
+        if (monthDeliveryDate > monthCurrentDate || yearDeliveryDate > yearCurrentDate) {
+            $("[data-step='1']").shouldBe(visible).click();
+        }
+        $$(".calendar__day").findBy(text(dayOfDeliveryDate)).click();
+        form.$("[data-test-id='name'] input").setValue("Томас Джефферсон");
+        form.$("[data-test-id='phone'] input").setValue("+79876543223");
+        form.$("[data-test-id='agreement']").click();
+        $x("//button[contains(@class,'button_view_extra')]").click();
+        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .getText();
+        $x("//button[contains(@class,'notification__closer')]").click();
+
+        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
+
     }
 }
