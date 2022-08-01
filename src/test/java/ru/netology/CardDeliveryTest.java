@@ -878,20 +878,18 @@ public class CardDeliveryTest {
     void successDeliveryWithPopupElements() {
         SelenideElement form = $x("//form");
 
-        form.$("[data-test-id='city'] input").setValue("Мо");
         String city = "Москва";
+        String firstTwoSymbols = city.substring(0,2);
+        form.$("[data-test-id='city'] input").setValue(firstTwoSymbols);
         $$x("//*[@class='popup__container']//*[@class='menu-item__control']").findBy(text(city)).click();
-        form.$("[data-test-id='city'] [class='input__control']").shouldHave(value("Москва"));
+        form.$("[data-test-id='city'] [class='input__control']").shouldHave(value(city));
         LocalDate currentDate = LocalDate.now();
-        int monthCurrentDate = currentDate.getMonthValue();
-        int yearCurrentDate = currentDate.getYear();
         LocalDate deliveryDate = LocalDate.now().plusWeeks(1);
-        int monthDeliveryDate = deliveryDate.getMonthValue();
-        int yearDeliveryDate = deliveryDate.getYear();
         String dayOfDeliveryDate = String.valueOf(deliveryDate.getDayOfMonth());
         String date = deliveryDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         form.$("[data-test-id='date'] button").click();
-        if (monthDeliveryDate > monthCurrentDate || yearDeliveryDate > yearCurrentDate) {
+        if (deliveryDate.getMonthValue() > currentDate.getMonthValue() ||
+                deliveryDate.getYear() > currentDate.getYear()) {
             $("[data-step='1']").shouldBe(visible).click();
         }
         $$(".calendar__day").findBy(text(dayOfDeliveryDate)).click();
