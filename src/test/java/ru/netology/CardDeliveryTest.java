@@ -21,9 +21,14 @@ public class CardDeliveryTest {
         open("http://localhost:9999/");
     }
 
+    public String dateGenerate(int days) {
+        String date = LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return date;
+    }
+
     @Test
     void successDelivery() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -33,16 +38,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15)).
+                shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void emptyCity() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='date'] input").clear();
@@ -51,14 +54,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Поле обязательно для заполнения", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Поле обязательно для заполнения"));
     }
 
     @Test
     void validCityLowerCase() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("москва");
@@ -68,16 +70,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validCityUpperCase() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("МОСКВА");
@@ -87,16 +87,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validCompositeCityLowerCase() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("южно-сахалинск");
@@ -106,16 +104,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validCompositeCityUpperCase() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("ЮЖНО-САХАЛИНСК");
@@ -125,16 +121,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validCompositeCityFirstSymbolFirstWordSmall() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("южно-Сахалинск");
@@ -144,16 +138,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validCompositeCityFirstSymbolSecondWordSmall() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Южно-сахалинск");
@@ -163,16 +155,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void cityWithoutDelivery() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Кукумбер");
@@ -182,14 +172,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCityNameFromTwoValidCityNamesWithSpace() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва Якутск");
@@ -199,14 +188,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCityNameFromTwoValidCityNamesWithoutSpace() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("МоскваЯкутск");
@@ -216,14 +204,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCityNameFromTwoValidCityNamesWithHyphen() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва-Якутск");
@@ -233,14 +220,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCityNameFromValidNameWithoutHyphen() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Южно Сахалинск");
@@ -250,14 +236,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void validCityWithSpaceAtFirst() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue(" Москва");
@@ -267,14 +252,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void validCityWithHyphenAtFirst() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("-Москва");
@@ -284,14 +268,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void validCityLatin() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Moscow");
@@ -301,14 +284,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCityDigits() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("80401");
@@ -318,14 +300,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
     @Test
     void invalidCitySpecialSymbols() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("<>:{}");
@@ -335,9 +316,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Доставка в выбранный город недоступна", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Доставка в выбранный город недоступна"));
     }
 
 
@@ -351,9 +331,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Неверно введена дата", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Неверно введена дата"));
     }
 
     @Test
@@ -367,9 +346,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Неверно введена дата", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Неверно введена дата"));
     }
 
     @Test
@@ -383,9 +361,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Неверно введена дата", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Неверно введена дата"));
     }
 
     @Disabled
@@ -400,9 +377,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Неверно введена дата", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Неверно введена дата"));
     }
 
     @Test
@@ -418,9 +394,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Заказ на выбранную дату невозможен", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Заказ на выбранную дату невозможен"));
     }
 
     @Test
@@ -435,14 +410,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Заказ на выбранную дату невозможен", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Заказ на выбранную дату невозможен"));
     }
 
     @Test
     void invalidEarlyDate() {
-        String date = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(1);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -452,9 +426,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='date'] .input_invalid .input__sub").getText();
-
-        assertEquals("Заказ на выбранную дату невозможен", subText.trim());
+        $("[data-test-id='date'] .input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Заказ на выбранную дату невозможен"));
     }
 
     @Test
@@ -469,11 +442,9 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
@@ -488,16 +459,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void emptyName() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -506,14 +475,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Поле обязательно для заполнения", subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Поле обязательно для заполнения"));
     }
 
     @Test
     void invalidNameSpaceOnly() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -523,15 +491,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Поле обязательно для заполнения", subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Поле обязательно для заполнения"));
     }
 
     @Disabled
     @Test
     void invalidNameHyphenOnly() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -541,14 +508,12 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        boolean invalidInput = $("[data-test-id='name'].input_invalid .input__sub").isDisplayed();
-
-        assertTrue(invalidInput);
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible);
     }
 
     @Test
     void invalidNameLatin() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -558,15 +523,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
-                subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Имя и Фамилия указаные неверно. " +
+                        "Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
     void validNameCompositeName() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -576,16 +540,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validNameCompositeFamily() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -595,16 +557,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void validNameCompositeNameAndFamily() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -614,17 +574,15 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Disabled
     @Test
     void validNameWithSymbolE() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -634,16 +592,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
     }
 
     @Test
     void invalidNameOneSymbolInLatin() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -653,15 +609,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
-                subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Имя и Фамилия указаные неверно. " +
+                        "Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
     void invalidNameSpecialSymbol() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -671,15 +626,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
-                subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Имя и Фамилия указаные неверно. " +
+                        "Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
     void invalidNameSpecialSymbolOnly() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -689,15 +643,14 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='name'].input_invalid .input__sub").getText();
-
-        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
-                subText.trim());
+        $("[data-test-id='name'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Имя и Фамилия указаные неверно. " +
+                        "Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
     void emptyPhone() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -706,14 +659,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='name'] input").setValue("Томас Джефферсон");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Поле обязательно для заполнения", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Поле обязательно для заполнения"));
     }
 
     @Test
     void invalidFormatPhone8InsteadOfPlus7() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -723,14 +675,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("89876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidFormatPhoneWithBrackets() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -740,14 +691,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+7(987)6543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidFormatPhoneWithHyphens() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -757,14 +707,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+7987-654-32-23");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidFormatPhoneWithSpaces() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -774,14 +723,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+7987 654 32 23");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidPhoneWithoutPlus() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -791,14 +739,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidPhoneLatin() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -808,14 +755,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876J43223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidPhoneSpecialSymbols() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -825,14 +771,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+7987.644322");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void invalidPhoneCyrillic() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -842,14 +787,13 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79877644ш22");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='phone'].input_invalid .input__sub").getText();
-
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", subText.trim());
+        $("[data-test-id='phone'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
     void checkboxNotPressed() {
-        String date = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String date = dateGenerate(3);
         SelenideElement form = $x("//form");
 
         form.$("[data-test-id='city'] input").setValue("Москва");
@@ -858,9 +802,7 @@ public class CardDeliveryTest {
         form.$("[data-test-id='name'] input").setValue("Томас Джефферсон");
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         $x("//button[contains(@class,'button_view_extra')]").click();
-        boolean checkbox = form.$("[data-test-id='agreement'].input_invalid").isDisplayed();
-
-        assertTrue(checkbox);
+        form.$("[data-test-id='agreement'].input_invalid").shouldBe(visible);
     }
 
     @Test
@@ -869,9 +811,8 @@ public class CardDeliveryTest {
 
         form.$("[data-test-id='date'] input").clear();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String subText = $("[data-test-id='city'].input_invalid .input__sub").getText();
-
-        assertEquals("Поле обязательно для заполнения", subText.trim());
+        $("[data-test-id='city'].input_invalid .input__sub").shouldBe(visible)
+                .shouldHave(exactText("Поле обязательно для заполнения"));
     }
 
     @Test
@@ -879,11 +820,11 @@ public class CardDeliveryTest {
         SelenideElement form = $x("//form");
 
         String city = "Москва";
-        String firstTwoSymbols = city.substring(0,2);
+        String firstTwoSymbols = city.substring(0, 2);
         form.$("[data-test-id='city'] input").setValue(firstTwoSymbols);
         $$x("//*[@class='popup__container']//*[@class='menu-item__control']").findBy(text(city)).click();
         form.$("[data-test-id='city'] [class='input__control']").shouldHave(value(city));
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.now().plusDays(3);
         LocalDate deliveryDate = LocalDate.now().plusWeeks(1);
         String dayOfDeliveryDate = String.valueOf(deliveryDate.getDayOfMonth());
         String date = deliveryDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -897,11 +838,8 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79876543223");
         form.$("[data-test-id='agreement']").click();
         $x("//button[contains(@class,'button_view_extra')]").click();
-        String popupText = $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
-                .getText();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15))
+                .shouldHave(exactText("Успешно!\nВстреча успешно забронирована на " + date));
         $x("//button[contains(@class,'notification__closer')]").click();
-
-        assertEquals("Успешно!" + "\n" + "Встреча успешно забронирована на " + date, popupText.trim());
-
     }
 }
